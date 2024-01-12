@@ -16,7 +16,6 @@ import {
 import Content from '../../../layout/content/Content';
 import Head from '../../../layout/head/Head';
 import headers from "../token";
-import Addoncovers from "./Addoncovers";
 import PolicyPerquisite from "./PolicyPerquisite";
 import Premimum from "./Premimum";
 import PreviousInsurer from "./PreviousInsurer";
@@ -67,6 +66,7 @@ export default function Vehicledetails({ className, variation, ...props }) {
         tpEndDate_nb: "",
         odEndDate_nb: "",
         previousInsurer: "",
+        previousInsurerCode: "",
         previousPolicyType: "",
         policyStartDate: "",
         policyEndDate: "",
@@ -110,33 +110,48 @@ export default function Vehicledetails({ className, variation, ...props }) {
             })
     }, [])
 
+
+
+
+    let defaultcover = [];
     let productCode = [];
     if (privateCar.policyType === "New Business" || privateCar.policyType === "Rollover") {
 
         if (privateCar.customerType === "Individual") {
             productCode = addons.PCC.filter((item) => (item.coverName !== 'LEGAL LIABILITY PAID TO EMPLOYEE' && item.coverName !== 'P.A. COVER TO PAID DRIVER' && item.coverName !== 'TARIFF DISCOUNT'));
+            defaultcover = addons.PCC.filter((item) => item.coverType.includes("DEFAULT"));
         }
         else if (privateCar.customerType === "Company") {
             productCode = addons.PCC.filter((item) => item.coverName !== 'LEGAL LIABILITY PAID TO DRIVER' && item.coverName !== 'TARIFF DISCOUNT');
+            defaultcover = addons.PCC.filter((item) => item.coverType.includes("DEFAULT"));
         }
     }
     else if (privateCar.policyType === "Own Damage") {
         if (privateCar.customerType === "Individual") {
             productCode = addons.PCCOD.filter((item) => (item.coverName !== 'LEGAL LIABILITY PAID TO EMPLOYEE' && item.coverName !== 'P.A. COVER TO PAID DRIVER'));
+            defaultcover = addons.PCCOD.filter((item) => item.coverType.includes("DEFAULT"));
         }
         else if (privateCar.customerType === "Company") {
             productCode = addons.PCCOD.filter((item) => item.coverName !== 'LEGAL LIABILITY PAID TO DRIVER');
+            defaultcover = addons.PCCOD.filter((item) => item.coverType.includes("DEFAULT"));
         }
+
     }
     else if (privateCar.policyType === "Third Party") {
         if (privateCar.customerType === "Individual") {
             productCode = addons.PCT.filter((item) => (item.coverName !== 'LEGAL LIABILITY PAID TO EMPLOYEE' && item.coverName !== 'P.A. COVER TO PAID DRIVER' && item.coverName !== 'TARIFF DISCOUNT'));
+            defaultcover = addons.PCC.filter((item) => item.coverType.includes("DEFAULT")).filter((newitem =>
+                newitem.coverName.includes("THIRD PARTY LIABILITY")
+            ))
+
         }
         else if (privateCar.customerType === "Company") {
             productCode = addons.PCT.filter((item) => item.coverName !== 'LEGAL LIABILITY PAID TO DRIVER' && item.coverName !== 'TARIFF DISCOUNT');
+            defaultcover = addons.PCC.filter((item) => item.coverType.includes("DEFAULT")).filter((newitem =>
+                newitem.coverName.includes("THIRD PARTY LIABILITY")
+            ))
         }
     }
-
 
 
 
@@ -186,7 +201,7 @@ export default function Vehicledetails({ className, variation, ...props }) {
         setP("");
     }
     return (
-        <UserContext.Provider value={{ privateCar, setPrivateCar, productCode }}>
+        <UserContext.Provider value={{ privateCar, setPrivateCar, productCode, defaultcover }}>
             <React.Fragment >
                 <Head title="PrivateCar" />
                 <Content >
@@ -236,7 +251,7 @@ export default function Vehicledetails({ className, variation, ...props }) {
                                                 <Icon name="file-text" /> <span>Previous Insurer</span>
                                             </NavLink>
                                         </NavItem>}
-                                        <NavItem className="nav-item">
+                                        {/*  <NavItem className="nav-item">
                                             <NavLink
                                                 tag="a"
 
@@ -245,13 +260,13 @@ export default function Vehicledetails({ className, variation, ...props }) {
                                             >
                                                 <Icon name="bell" /> <span>Add-on Covers</span>
                                             </NavLink>
-                                        </NavItem>
+                                        </NavItem> */}
                                         <NavItem className="nav-item">
                                             <NavLink
                                                 tag="a"
 
-                                                className={classnames({ active: activeIconTab === "5" })}
-                                                onClick={() => handleEdit("5")}
+                                                className={classnames({ active: activeIconTab === "4" })}
+                                                onClick={() => handleEdit("4")}
                                             >
                                                 <Icon name="activity" /> <span>Quotes</span>
                                             </NavLink>
@@ -275,15 +290,15 @@ export default function Vehicledetails({ className, variation, ...props }) {
                                         {privateCar.policyType !== "New Business" && <TabPane tabId="3">
                                             <PreviousInsurer handleNext={handleNext} handleBack={handleBack} />
                                         </TabPane>}
-                                        <TabPane tabId="4">
+                                        {/* <TabPane tabId="4">
                                             <Addoncovers handleNext={handleNext} handleBack={handleBack} />
-                                        </TabPane>
-                                        <TabPane tabId="5">
+                                        </TabPane> */}
+                                        <TabPane tabId="4">
                                             <Premimum handleBack={handleBack} />
                                         </TabPane>
                                     </TabContent>
 
-                                        {activeTab !== '5' && <><hr /><div className={[`accordion${variation ? " accordion-s" + variation : ""}${className ? " " + className : ""}`]}>
+                                        {activeTab !== '4' && <><hr /><div className={[`accordion${variation ? " accordion-s" + variation : ""}${className ? " " + className : ""}`]}>
                                             <div className="accordion-item">
                                                 <div className={[`accordion-head${isOpen !== "1" ? " collapsed" : ""}`]} onClick={() => toggleCollapse("1")}>
                                                     <OverlineTitle tag="span" className="preview-title-lg mt-4">
@@ -332,7 +347,7 @@ export default function Vehicledetails({ className, variation, ...props }) {
                                             }</>}
                                     </Block>
                                 </div>
-                                {activeIconTab !== "5" && <Sidebar toggleState={sideBar} >
+                                {activeIconTab !== "4" && <Sidebar toggleState={sideBar} >
                                     <div className="card-inner">
                                         <div className="user-card user-card-s2 mt-5 mt-xxl-0">
                                             <UserAvatar className="lg" theme="primary" text="PC" />

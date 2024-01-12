@@ -13,6 +13,7 @@ import {
     OverlineTitle
 } from '../../../components/Component';
 import headers from '../token';
+import Request from './Request';
 import { UserContext } from './Vehicledetails';
 export let date_od;
 export let date_tp;
@@ -22,17 +23,18 @@ export default function Vehicle(props) {
     const { register, handleSubmit, formState: { errors }, setValue, clearErrors } = useForm();
     const onFormSubmit = (e) => {
 
-        if (privateCar.policyType === "New Business") {
-            setPrivateCar({ ...privateCar, manufacturingYear: thisyear })
-        }
+
 
 
 
         if (privateCar.policyType === "New Business" && privateCar.customerType === "Individual") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od })
         }
         else if (privateCar.policyType === "New Business" && privateCar.customerType === "Company") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od })
+        }
+        else if (privateCar.policyType !== "New Business") {
+            setPrivateCar({ ...privateCar, fuel: result, seatingCapacity: seatingcapacity, cc: cc })
         }
 
         props.handleNext()
@@ -63,10 +65,14 @@ export default function Vehicle(props) {
             date_od1.setDate(date_od1.getDate() - 1);
         }
         let date_tp1 = new Date(privateCar.registrationDate);
+        /*   console.log(date_tp1.toLocaleDateString('en-GB')) */
         date_tp1.setDate(date_tp1.getDate() - 1);
         date_tp1.setFullYear(date_tp1.getFullYear() + 3);
-        date_od = moment(date_od1).format('DD-MM-YYYY');
-        date_tp = moment(date_tp1).format('DD-MM-YYYY');
+        date_od = moment(date_od1).format('YYYY-MM-DD');
+        date_tp = moment(date_tp1).format('YYYY-MM-DD');
+
+
+
     }
 
 
@@ -193,6 +199,7 @@ export default function Vehicle(props) {
                     <span >Basic info, like insured name and address for which claim needs to be processed</span>
                 </BlockHeadContent>
             </BlockHead>
+            <Request />
             <Block >
                 <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
                     <Row className="gy-2">

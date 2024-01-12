@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Card, Col, Collapse, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { Block, Icon } from '../../../components/Component';
@@ -26,9 +27,16 @@ import img133 from "../Insurer_Images/133.png";
 import img135 from "../Insurer_Images/135.png";
 import headers from '../token';
 import { UserContext } from './Vehicledetails';
+import da from './backup';
+import dat from './single';
 export default function Premimum({ className, variation, ...props }) {
-    const { privateCar, setPrivateCar, productCode } = useContext(UserContext);
+    const { privateCar, setPrivateCar, productCode, defaultcover } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState("0");
+    const [range, setRange] = useState();
+
+    const [modalTop, setModalTop] = useState(false);
+
+    const toggleTop = () => setModalTop(!modalTop);
     const toggleCollapse = (param) => {
         if (param === isOpen) {
             setIsOpen("0");
@@ -39,18 +47,95 @@ export default function Premimum({ className, variation, ...props }) {
 
     const [insurerdetails, setInsurerdetails] = useState();
     useEffect(() => {
-        fetch('https://pot.fapremium.net/masters/api/getInsurerDetail.json', {
-            method: 'POST',
-            headers
+        axios({
+            method: "POST",
+            url: 'https://pot.fapremium.net/mis/api/saveQuoteDetails.json',
+            headers,
+            data: da,
+        }).then(res => {
+            console.log("save", res.data);
         })
-            .then((response) => response.json())
-            .then((responseData) => {
-                setInsurerdetails(responseData.insurerList);
-            }
+            .catch(err => {
+                console.log("error in request", err);
+            });
+        axios({
+            method: "POST",
+            url: 'https://pot.fapremium.net/mis/api/singleInsurerCalc.json',
+            headers,
+            data: dat,
+        }).then(res => {
+            console.log("single ", res.data);
+        })
+            .catch(err => {
+                console.log("error in request", err);
+            });
 
-
-            )
+        /*  fetch('https://pot.fapremium.net/masters/api/getInsurerDetail.json', {
+             method: 'POST',
+             headers
+         })
+             .then((response) => response.json())
+             .then((responseData) => {
+                 setInsurerdetails(responseData.insurerList);
+             }
+  ) */
     }, []);
+
+
+
+    const handleAdd = (e) => {
+        if (e.target.checked && privateCar.additionalCovers.includes(e.target.value) !== true) {
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, e.target.value] })
+        }
+        else {
+            if (privateCar.additionalCovers.includes(e.target.value) === true) {
+                let val = privateCar.additionalCovers.filter((it) => it !== e.target.value);
+                setPrivateCar({ ...privateCar, additionalCovers: val })
+            }
+        }
+    }
+    const handleAddon = (e) => {
+        if (e.target.checked && privateCar.addon.includes(e.target.value) !== true) {
+            setPrivateCar({ ...privateCar, addon: [...privateCar.addon, e.target.value] })
+        }
+        else {
+            if (privateCar.addon.includes(e.target.value) === true) {
+                let val1 = privateCar.addon.filter((it) => it !== e.target.value);
+                setPrivateCar({ ...privateCar, addon: val1 })
+            }
+        }
+    }
+    const handleDiscount = (e) => {
+        if (e.target.checked && privateCar.discount.includes(e.target.value) !== true) {
+            setPrivateCar({ ...privateCar, discount: [...privateCar.discount, e.target.value] })
+        }
+        else {
+            if (privateCar.discount.includes(e.target.value) === true) {
+                let val = privateCar.discount.filter((it) => it !== e.target.value);
+                setPrivateCar({ ...privateCar, discount: val })
+            }
+        }
+    }
+    const handledrop = (e, v) => {
+        if (v === "P.A. COVER TO PAID DRIVER") {
+            setPrivateCar({ ...privateCar, pa_cover: (e.target.value) })
+        }
+        else if (v === "UNNAMED PASSENGER") {
+            setPrivateCar({ ...privateCar, unnamed_passenger: (e.target.value) })
+        }
+    }
+    const handleaddonDrop = (e, v) => {
+        if (v === "PERSONAL BELONGING") {
+            setPrivateCar({ ...privateCar, personal_belongings: (e.target.value) })
+        }
+        else if (v === "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") {
+            setPrivateCar({ ...privateCar, hotel: (e.target.value) })
+        }
+    }
+
+
+
+
     const [sm, updateSm] = useState(false);
     let images = [img133, img101, img104, img105, img107, img135, img112, img114, img115, img116, img117, img118, img120, img122, img123, img124, img125, img126, img127, img128, img129, img130, img131]
     const [mobileView, setMobileView] = useState(false);
@@ -76,6 +161,7 @@ export default function Premimum({ className, variation, ...props }) {
             window.removeEventListener("load", viewChange);
         };
     }, []);
+    console.log(privateCar)
 
     const [modal, setModal] = useState(false);
 
@@ -97,18 +183,35 @@ export default function Premimum({ className, variation, ...props }) {
                         </div>
                         <div className="card-inner border-bottom  ">
 
-                            <Button className="btn btn-dim bg-purple-dim" size="md" >Change IDV</Button>
+                            <Button color='primary' className="btn " size="md" onClick={toggleTop}>
+                                Change IDV
+                            </Button>
+                            <Modal isOpen={modalTop} toggle={toggleTop} className="modal-dialog-top">
+                                <ModalHeader
+                                    toggle={toggleTop}
+                                    close={
+                                        <button className="close" onClick={toggleTop}>
+                                            <Icon name="cross" />
+                                        </button>}>
+                                    IDV Value
+                                </ModalHeader>
+                                <ModalBody>
+                                    <label for="customRange1" class="form-label">Example range</label>
+                                    <input type="range" class="form-range" min={0} max={10} onChange={(e) => setRange(e.target.value)} id="customRange1" value={range}></input>
+                                    <p>{range}</p>
+
+                                </ModalBody>
+                                <ModalFooter className="bg-light">
+                                    <Button color='primary'>Update</Button>
+                                </ModalFooter>
+                            </Modal>
 
 
                         </div>
-                        <div className="card-inner border-bottom  ">
-
-
+                        <div className="card-inner   ">
                             <div className="accordion">
-
                                 <div className="accordion-item">
-                                    <div
-                                        className="accordion-head"
+                                    <div className="accordion-head"
                                         onClick={() => toggleCollapse("1")}
                                     >
                                         <h6 className="title">Addon Covers</h6>
@@ -121,22 +224,29 @@ export default function Premimum({ className, variation, ...props }) {
                                         <div className="accordion-inner">
                                             <ul className="custom-control-group custom-control-vertical custom-control-stacked w-100">
                                                 {privateCar.policyType !== "" && productCode !== undefined &&
-                                                    productCode.filter(name => (name.coverType).includes("ADDON")).map(filteredName => {
+                                                    productCode.filter(name => (name.coverType).includes("ADDON")).map((filteredName) => {
                                                         return (
                                                             <><li>
-                                                                <div className="custom-control custom-control-sm custom-checkbox mb-2" >
-                                                                    <input value={filteredName.coverName} type="checkbox" className="custom-control-input" id={filteredName.coverCode + 10} name="user-choose" />
-                                                                    <label className="custom-control-label" htmlFor={filteredName.coverCode}>
+                                                                <div onClick={(e) => handleAddon(e)} className="custom-control custom-control-sm custom-checkbox mb-2" >
+                                                                    {(privateCar.addon.includes(filteredName.coverName)) ?
+                                                                        <><input value={filteredName.coverName} type="checkbox" className="custom-control-input" defaultChecked id={filteredName.coverCode + 10} name="user-choose" />
+                                                                            <label className="custom-control-label" htmlFor={filteredName.coverCode + 10}>
+                                                                                <span className="user-card">                           <span className="user-name">{filteredName.coverName}</span>
+                                                                                </span>
+                                                                            </label> </>
 
-                                                                        <span >{filteredName.coverName}</span>
+                                                                        : <> <input value={filteredName.coverName} type="checkbox" className="custom-control-input" id={filteredName.coverCode + 10} name="user-choose" />
+                                                                            <label className="custom-control-label" htmlFor={filteredName.coverCode + 10}>
 
-                                                                    </label>
+                                                                                <span >{filteredName.coverName}</span>
+
+                                                                            </label></>}
                                                                 </div>
                                                             </li>
                                                                 <li>  {
                                                                     privateCar.addon.includes(filteredName.coverName) && filteredName.sumInsuredList.length > 0 &&
                                                                     <div className="bg-primary-dim card-inner mb-2 rounded-2 border-2 border-primary"> <label className="form-label " htmlFor="list1">Sum Insured </label>
-                                                                        <select className="form-control " type="select" name="select" id="list1">
+                                                                        <select className="form-control " onChange={(e) => handleaddonDrop(e, filteredName.coverName)} type="select" name="select" id="list1">
                                                                             <option value="">Select</option>
                                                                             {
                                                                                 filteredName.sumInsuredList.map((item, index) => (<option value={item}>{item}</option>)
@@ -170,19 +280,22 @@ export default function Premimum({ className, variation, ...props }) {
                                                     productCode.filter(name => (name.coverType).includes("ADDITIONAL")).map(filteredName => {
                                                         return (
                                                             <> <li>
-                                                                <div className="custom-control custom-control-sm custom-checkbox mb-2">
-                                                                    <input value={filteredName.coverName} type="checkbox" className="custom-control-input" id={filteredName.coverCode} name="user-choose" />
-                                                                    <label className="custom-control-label" htmlFor={filteredName.coverCode}>
-                                                                        <span >{filteredName.coverName}</span>
+                                                                <div className="custom-control custom-control-sm custom-checkbox mb-2" onClick={(e) => handleAdd(e)}>
+                                                                    {(privateCar.additionalCovers.includes(filteredName.coverName)) ? <><input value={filteredName.coverName} type="checkbox" className="custom-control-input" defaultChecked id={filteredName.coverCode} name="user-choose" />
+                                                                        <label className="custom-control-label" htmlFor={filteredName.coverCode}>
+                                                                            <span className="user-card">                           <span className="user-name">{filteredName.coverName}</span>
+                                                                            </span>
+                                                                        </label> </> : <><input value={filteredName.coverName} type="checkbox" className="custom-control-input" id={filteredName.coverCode + 20} name="user-choose" />
+                                                                        <label className="custom-control-label" htmlFor={filteredName.coverCode + 20}>
+                                                                            <span >{filteredName.coverName}</span>
 
-                                                                    </label>
-
+                                                                        </label></>}
                                                                 </div>
                                                             </li>
                                                                 <li> {
                                                                     privateCar.additionalCovers.includes(filteredName.coverName) && filteredName.sumInsuredList.length > 0 &&
                                                                     <div className="bg-primary-dim card-inner mb-2 rounded-2 border-2 border-primary"><label className="form-label" htmlFor="list1">Sum Insured </label>
-                                                                        <select className="form-control form-select" type="select" name="select" id="default-4">
+                                                                        <select onChange={(e) => handledrop(e, filteredName.coverName)} className="form-control form-select" type="select" name="select" id="default-4">
                                                                             <option value="">Select</option>
                                                                             {
                                                                                 filteredName.sumInsuredList.map((item) => (<option value={item}>{item}</option>)
@@ -221,9 +334,9 @@ export default function Premimum({ className, variation, ...props }) {
                                                     productCode.filter(name => (name.coverType).includes("DISCOUNTS")).map(filteredName => {
                                                         return (
                                                             <li>
-                                                                <div className="custom-control custom-control-sm custom-checkbox" >
-                                                                    <input type="checkbox" className="custom-control-input" id={filteredName.coverCode} value={filteredName.coverName} name="user-choose" />
-                                                                    <label className="custom-control-label" htmlFor={filteredName.coverCode}>
+                                                                <div className="custom-control custom-control-sm custom-checkbox" onClick={(e) => handleDiscount(e)} >
+                                                                    <input type="checkbox" className="custom-control-input" id={filteredName.coverCode + 30} value={filteredName.coverName} name="user-choose" />
+                                                                    <label className="custom-control-label" htmlFor={filteredName.coverCode + 30}>
 
                                                                         <span >{filteredName.coverName}</span>
 
@@ -238,10 +351,50 @@ export default function Premimum({ className, variation, ...props }) {
                                     </Collapse>
                                 </div>
 
+                                <div className="accordion-item">
+                                    <div
+                                        className="accordion-head collapsed"
+                                        onClick={() => toggleCollapse("6")}
+                                    >
+                                        <h6 className="title">
+                                            Previous Covers
+                                        </h6>
+                                    </div>
+                                    <Collapse
+                                        className="accordion-body"
+                                        isOpen={isOpen === "6" ? true : false}
+                                    >
+                                        <div className="accordion-inner">
+                                            <ul className="custom-control-group custom-control-vertical custom-control-stacked w-100">
+                                                {privateCar.policyType !== "" && productCode !== undefined &&
+                                                    productCode.filter(name => name.coverType.includes("DISCOUNTS") || name.coverType.includes("ADDON") || name.coverType.includes("ADDITIONAL")).map(filteredName => {
+                                                        return (
+                                                            <li>
+                                                                <div className="custom-control custom-control-sm custom-checkbox mb-2" >
+                                                                    <input type="checkbox" className="custom-control-input" id={filteredName.coverCode + 40} value={filteredName.coverName} name="user-choose" />
+                                                                    <label className="custom-control-label" htmlFor={filteredName.coverCode + 40}>
+
+                                                                        <span >{filteredName.coverName}</span>
+
+                                                                    </label>
+                                                                </div>
+                                                            </li>
+
+                                                        )
+                                                    })}
+                                            </ul>
+
+                                        </div>
+                                    </Collapse>
+                                </div>
+
 
                             </div>
 
 
+                        </div>
+                        <div className='text-center w-100'>
+                            <Button color="primary"> Re-calculate</Button>
                         </div>
                     </div>
                 </div>
@@ -269,6 +422,10 @@ export default function Premimum({ className, variation, ...props }) {
                                     </Col>
                                     <Col lg="4" className="align-center justify-content-center"><Button size="sm" color='white' className=" btn btn"><span> Download</span>  <Icon name="arrow-to-down" /></Button></Col>
                                 </Row>
+                                <Row className='card-inner'> <Col lg="6" className='align-center justify-content-center'><p ><strong className='text-black'>Min IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> 680000 </span></p>
+                                </Col>
+                                    <Col lg="6" className='align-center justify-content-center'><p ><strong className='text-black'>Max IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> 680000 </span></p>
+                                    </Col></Row>
                                 <Row className='card-inner'  >
 
                                     <Col className='align-center '>
@@ -282,7 +439,7 @@ export default function Premimum({ className, variation, ...props }) {
 
                                                     onClick={() => toggleCollapse("5")}
                                                 >
-                                                    <Button size='sm' color='primary'>Addon Covers</Button>
+                                                    <Button size='sm' color='primary'>Addon</Button>
 
                                                 </div>
                                                 <Collapse
@@ -309,11 +466,13 @@ export default function Premimum({ className, variation, ...props }) {
 
 
                                     </Col>
+
                                 </Row>
                             </Col>
-                            <Col lg="3" className="border-start card-inner justify-content-center ">
-                                <h5 className='mb-2 text-center' > <Icon name="sign-inr" />7500</h5>
-                                <Button color='primary' className="btn" size='md' onClick={toggle}>Premium Breakup</Button>
+                            <Col lg="3" className="border-start card-inner text-center gy-2 ">
+                                <Col>    <h5 className=' text-center' > <Icon name="sign-inr" />7500</h5></Col>
+                                <Col>   <Button color='primary' size='md' onClick={toggle}>Premium Breakup</Button></Col>
+                                <Col className=''>   <Button color='primary' className="btn" size='md' >Buy</Button></Col>
                             </Col>
                         </Row>
                     </Card>
@@ -325,105 +484,64 @@ export default function Premimum({ className, variation, ...props }) {
                 <ModalHeader
                     toggle={toggle}
                     close={
-                        <button className="close" onClick={toggle}>
-                            <Icon name="cross" />
-                        </button>
+                        <div>
+                            <button className="close ms-2" onClick={toggle}>
+                                <Icon name="cross" />
+                            </button>
+                            <button className="close" >
+                                <Icon name="share" />
+                            </button>
+
+                        </div>
                     }
                 >
-                    Modal title
+                    Premium Breakup
                 </ModalHeader>
                 <ModalBody>
                     <form>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="full-name">
-                                Full Name
-                            </label>
-                            <div className="form-control-wrap">
-                                <input type="text" className="form-control" id="full-name" />
+                        <div className="form-group border-bottom">
+                            <h6>Basic Cover</h6>
+                            <div>
+                                {
+                                    (defaultcover.length > 0) && defaultcover.map((item) =>
+                                    (
+
+                                        item.coverName !== "24 x 7 Individual PA" && <p>{item.coverName}</p>
+
+                                    ))
+
+                                }
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="email">
-                                Email
-                            </label>
-                            <div className="form-control-wrap">
-                                <input type="text" className="form-control" id="email" />
+                        <div className="form-group border-bottom">
+                            <h6>Addons</h6>
+                            <div>
+                                {(privateCar.addon.length > 0) && privateCar.addon.map((item) =>
+                                (
+                                    <p>{item}</p>
+
+                                ))}
+                                {(privateCar.additionalCovers.length > 0) && privateCar.additionalCovers.map((item) =>
+                                (
+                                    <p>{item}</p>
+
+                                ))}
+                                {(privateCar.discount.length > 0) && privateCar.discount.map((item) =>
+                                (
+                                    <p>{item}</p>
+
+                                ))}
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="phone-no">
-                                Phone No
-                            </label>
-                            <div className="form-control-wrap">
-                                <input type="number" className="form-control" id="phone-no" defaultValue="0880" />
-                            </div>
+                        <div className="form-group border-bottom">
+                            <h6>Discounts</h6>
+                            <div></div>
                         </div>
-                        <div className="form-group">
-                            <label className="form-label">Communication</label>
-                            <ul className="custom-control-group g-3 align-center">
-                                <li>
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="form-control custom-control-input"
-                                            id="fv-com-email"
-                                            name="com"
-                                            value="email"
-                                        />
-                                        <label className="custom-control-label" htmlFor="fv-com-email">
-                                            Email
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="form-control custom-control-input"
-                                            id="fv-com-sms"
-                                            name="com"
-                                            value="sms"
-                                        />
-                                        <label className="custom-control-label" htmlFor="fv-com-sms">
-                                            SMS
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            id="fv-com-phone"
-                                            name="com"
-                                            value="phone"
-                                        />
-                                        <label className="custom-control-label" htmlFor="fv-com-phone">
-                                            {" "}
-                                            Phone{" "}
-                                        </label>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="amount">
-                                Amount
-                            </label>
-                            <div className="form-control-wrap">
-                                <input type="text" className="form-control" id="amount" />
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <Button color="primary" type="submit" onClick={(ev) => ev.preventDefault()} size="lg">
-                                Save Information
-                            </Button>
-                        </div>
+                        <Button color='primary' onClick={(e) => (e.preventDefault())}>Pay</Button>
+
                     </form>
                 </ModalBody>
-                <ModalFooter className="bg-light">
-                    <span className="sub-text">Modal Footer Text</span>
-                </ModalFooter>
+
             </Modal>
 
 

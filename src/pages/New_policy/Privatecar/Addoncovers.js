@@ -7,13 +7,10 @@ import {
     BlockTitle,
     OverlineTitle
 } from '../../../components/Component';
-/* import addons from "./Addondetails";
- */ import { UserContext } from "./Vehicledetails";
-
+import { UserContext } from "./Vehicledetails";
 
 export default function Addoncovers(props) {
     const { privateCar, setPrivateCar, productCode } = useContext(UserContext);
-    console.log(privateCar.additonalcovers)
 
 
 

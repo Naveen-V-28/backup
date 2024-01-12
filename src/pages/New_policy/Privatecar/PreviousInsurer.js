@@ -12,13 +12,14 @@ export default function PreviousInsurer(props, { alter }) {
     const { register, handleSubmit, formState: { errors }, setValue, clearErrors } = useForm();
     const onFormSubmit = (e) => {
         if (privateCar.customerType === "Individual") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"] })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode })
         }
         else if (privateCar.customerType === "Company") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"] })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode })
         }
         props.handleNext()
     };
+
     const [insurer, setInsurer] = useState();
     useEffect(() => {
         fetch('https://pot.fapremium.net/masters/api/getInsurerDetail.json', {
@@ -31,7 +32,6 @@ export default function PreviousInsurer(props, { alter }) {
             })
     }, []);
 
-    /* console.log(insurer) */
 
 
 
@@ -44,6 +44,11 @@ export default function PreviousInsurer(props, { alter }) {
                 })
             );
         })
+    }
+
+    let previousInsuercode;
+    if (privateCar.previousInsurer !== "") {
+        previousInsuercode = insurer.filter((name) => (name.insurerName).includes(privateCar.previousInsurer))[0].insurerCode
     }
 
     const previous_insurer_type = [
@@ -254,7 +259,7 @@ export default function PreviousInsurer(props, { alter }) {
                                                 className="custom-control-input"
                                                 name="claim last year"
                                                 id="claim last year yes"
-                                                value={"Yes"}
+                                                value={"Y"}
                                                 {...register('lastyear', {
                                                     required: true,
                                                 })}
@@ -272,7 +277,7 @@ export default function PreviousInsurer(props, { alter }) {
                                                 className="custom-control-input"
                                                 name="claim last year"
                                                 id="claim last year no"
-                                                value={"No"}
+                                                value={"N"}
                                                 {...register('lastyear', {
                                                     required: true,
                                                 })}
@@ -305,7 +310,7 @@ export default function PreviousInsurer(props, { alter }) {
                                                 className="custom-control-input"
                                                 name="vehicle ownership"
                                                 id="vehicle ownership yes"
-                                                value="Yes"
+                                                value="Y"
                                                 {...register('ownership', {
                                                     required: true,
                                                 })}
@@ -323,7 +328,7 @@ export default function PreviousInsurer(props, { alter }) {
                                                 className="custom-control-input"
                                                 name="vehicle ownership"
                                                 id="vehicle ownership no"
-                                                value="No"
+                                                value="N"
                                                 {...register('ownership', {
                                                     required: true,
                                                 })}
@@ -345,7 +350,7 @@ export default function PreviousInsurer(props, { alter }) {
 
 
 
-                    {(privateCar.lastYearClaim === "No" && privateCar.vehicleOwnershipChanged === "No") && <Row className='mt-2 '>
+                    {(privateCar.lastYearClaim === "N" && privateCar.vehicleOwnershipChanged === "N") && <Row className='mt-2 '>
                         <Label>Previous Claim Bonus (NCB) ? <span className="text-danger">*</span></Label>
                         <Col>
                             <div className="preview-block">
