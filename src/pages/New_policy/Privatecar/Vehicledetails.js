@@ -34,13 +34,11 @@ export default function Vehicledetails({ className, variation, ...props }) {
             setIsOpen(param);
         }
     };
-
     const [accordian, setAccordian] = useState([
     ])
-
-
-
     const [privateCar, setPrivateCar] = useState({
+        save: "",
+        recalculate: "",
         policyType: "",
         policyTenure: "1 YEAR OD + 3 YEAR TP",
         customerType: "",
@@ -90,6 +88,7 @@ export default function Vehicledetails({ className, variation, ...props }) {
         rtoNo: "",
         rtoRegistration: "",
         zoneName: "",
+        quoteId: "",
 
 
     });

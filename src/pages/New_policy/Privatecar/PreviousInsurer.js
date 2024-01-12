@@ -12,10 +12,10 @@ export default function PreviousInsurer(props, { alter }) {
     const { register, handleSubmit, formState: { errors }, setValue, clearErrors } = useForm();
     const onFormSubmit = (e) => {
         if (privateCar.customerType === "Individual") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode, save: "true" })
         }
         else if (privateCar.customerType === "Company") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], policyStartDate: date_start, policyEndDate: date_end, previousInsurerCode: previousInsuercode, save: "true" })
         }
         props.handleNext()
     };

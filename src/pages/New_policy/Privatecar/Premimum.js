@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, Card, Col, Collapse, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { Block, Icon } from '../../../components/Component';
@@ -14,6 +13,9 @@ import img117 from "../Insurer_Images/117.png";
 import img118 from "../Insurer_Images/118.png";
 import img120 from "../Insurer_Images/120.png";
 import img122 from "../Insurer_Images/122.png";
+import dat from './single';
+
+import axios from 'axios';
 import img123 from "../Insurer_Images/123.png";
 import img124 from "../Insurer_Images/124.png";
 import img125 from "../Insurer_Images/125.png";
@@ -26,9 +28,8 @@ import img131 from "../Insurer_Images/131.png";
 import img133 from "../Insurer_Images/133.png";
 import img135 from "../Insurer_Images/135.png";
 import headers from '../token';
+import Insurerdetails from './Request';
 import { UserContext } from './Vehicledetails';
-import da from './backup';
-import dat from './single';
 export default function Premimum({ className, variation, ...props }) {
     const { privateCar, setPrivateCar, productCode, defaultcover } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState("0");
@@ -46,40 +47,454 @@ export default function Premimum({ className, variation, ...props }) {
     };
 
     const [insurerdetails, setInsurerdetails] = useState();
-    useEffect(() => {
-        axios({
-            method: "POST",
-            url: 'https://pot.fapremium.net/mis/api/saveQuoteDetails.json',
-            headers,
-            data: da,
-        }).then(res => {
-            console.log("save", res.data);
-        })
-            .catch(err => {
-                console.log("error in request", err);
-            });
-        axios({
-            method: "POST",
-            url: 'https://pot.fapremium.net/mis/api/singleInsurerCalc.json',
-            headers,
-            data: dat,
-        }).then(res => {
-            console.log("single ", res.data);
-        })
-            .catch(err => {
-                console.log("error in request", err);
-            });
+    let productcode, customer, businessType, productName;
 
-        /*  fetch('https://pot.fapremium.net/masters/api/getInsurerDetail.json', {
-             method: 'POST',
-             headers
+
+    if (privateCar.policyType === "New Business") {
+
+        productcode = "PCC"
+        businessType = "NEW BUSINESS"
+        productName = "COMPREHENSIVE"
+    }
+    if (privateCar.policyType === "Rollover") {
+
+        productcode = "PCC"
+        businessType = "RollOver"
+        productName = "COMPREHENSIVE"
+    }
+    if (privateCar.policyType === "Third Party") {
+
+        productcode = "PCT"
+        businessType = "RollOver"
+        productName = "THIRDPARTY"
+    }
+    if (privateCar.customerType === "Individual") {
+        customer = "CUSTOMER_INDIVIDUAL"
+    }
+
+    if (privateCar.customerType === "Company") {
+        customer = "COMPANY"
+    }
+
+    if (privateCar.policyType === "Own Damage") {
+
+        productcode = "PCCOD"
+        businessType = "RollOver"
+        productName = "PCC_OWNDAMAGE"
+    }
+    let coverageList = [];
+    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Individual") {
+        coverageList = [{
+            coverCode: "CPA",
+            coverName: "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)",
+            coverType: "ADDITIONAL",
+            isPrevOpted: "Y",
+            isRateParam: "1500000",
+            sumInsured: "0",
+            sumInsuredType: "NONE"
+        }]
+    }
+    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Company") {
+        coverageList = [{
+            coverCode: "LLE",
+            coverName: "LEGAL LIABILITY PAID TO EMPLOYEE",
+            coverType: "ADDITIONAL",
+            isPrevOpted: "Y",
+            isRateParam: "",
+            sumInsured: "0",
+            sumInsuredType: "NONE"
+        }]
+    }
+    productCode.map((list) => {
+        return (
+            privateCar.discount.includes(list.coverName) && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName !== "PERSONAL BELONGING" && list.coverName !== "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName === "PERSONAL BELONGING") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.personal_belongings,
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName === "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.hotel,
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName !== "P.A. COVER TO PAID DRIVER" && list.coverName !== "LEGAL LIABILITY PAID TO EMPLOYEE" && list.coverName !== "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)" && list.coverName !== "UNNAMED PASSENGER" && list.coverName !== "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    })
+
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "P.A. COVER TO PAID DRIVER") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.pa_cover,
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "UNNAMED PASSENGER") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.unnamed_passenger,
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.bi_fuel,
+                sumInsuredType: "NONE"
+            }]))
+    })
+
+    const request = {
+        "CustomerDetails": {
+            "firstName": "",
+            "lastName": "",
+            "mobileNo": "",
+            "email": "",
+            "customerType": customer,
+            "GSTIN": "",
+            "aadharNumber": "--",
+            "dateOfBirth": "",
+            "address1": "",
+            "address2": "",
+            "address3": "",
+            "areaCode": "",
+            "areaName": "",
+            "cityCode": "",
+            "cityName": "",
+            "stateName": "",
+            "stateCode": "",
+            "pinCode": "",
+            "panNumber": ""
+        },
+        "QuotationData": {
+            "quoteNo": "",
+            "renewalPolicyNo": "",
+            "lineOfBusiness": "MOTOR",
+            "subLine": "Private Car",
+            "productCode": productcode,
+            "productName": productName,
+            "businessType": businessType,
+            "policyStartDate": privateCar.policyStartDate,
+            "expiryDate": privateCar.policyEndDate,
+            "userId": "",
+            "isVipPolicy": "N",
+            "channelType": "POS",
+            "branchName": "",
+            "branchCode": "",
+            "quoteStatus": "QUOTE",
+            "insurerCode": "",
+            "insurerName": "",
+            "intgQuotationNo": "",
+            "policyTenure": "1",
+            "cpaTenure": "1",
+            "newBusinessOdTp": "",
+            "odExpiryDate": privateCar.odEndDate_nb,
+            "tpExpiryDate": privateCar.tpEndDate_nb,
+            "parentUserId": "saravanan@12",
+            "walletType": "",
+            "isCPADeclaration": "",
+            "shortfallPercent": "0.0",
+            "revisedDiscountRt": "0",
+            "PreviousPolicyDetails": {
+                "prevPolicyNo": "",
+                "prevPolicyExp": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyNcb": privateCar.ncb,
+                "prevPolicyInsurerCode": privateCar.previousInsurerCode,
+                "prevPolicyInsurerName": privateCar.previousInsurer,
+                "isPrevPolicyClaim": privateCar.lastYearClaim,
+                "prevPolicyType": privateCar.previousPolicyType,
+                "prevPolicyODExpireDate": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyTPExpireDate": privateCar.previousTpPolicyExpiryDate,
+                "prevPolicyTPStartDate": privateCar.previousTpPolicyStartDate
+            }
+        },
+        "VehicleDetails": {
+            "engineNo": privateCar.engineNumber,
+            "chassisNo": privateCar.chassisNumber,
+            "registrationNo": privateCar.registrationNumber1 + "-" + privateCar.registrationNumber2 + "-" + privateCar.registrationNumber3 + "-" + privateCar.registrationNumber4,
+            "yearOfMfg": privateCar.manufacturingYear,
+            "registrationDate": privateCar.registrationDate,
+            "makeCode": privateCar.makeCode,
+            "modelCode": privateCar.modelCode,
+            "makeName": privateCar.make,
+            "modelName": privateCar.model,
+            "subModelName": privateCar.subModel,
+            "subModelCode": privateCar.subModelCode,
+            "engineCC": "",
+            "fuelType": privateCar.fuel,
+            "rtoCode": privateCar.rtoCode,
+            "rtoName": privateCar.zoneName,
+            "actualIdv": 0,
+            "vehicleAge": 1.03,
+            "seatingCapacity": privateCar.seatingCapacity,
+            "cubicCapacity": privateCar.cc,
+            "zone": privateCar.zoneName,
+            "currentNCB": privateCar.ncb,
+            "isInBuilt": "false",
+            "isCarOwnerChanged": privateCar.vehicleOwnershipChanged,
+            "isUsedToVehicle": "N",
+            "istrailerneed": "",
+            "rtoNo": privateCar.rtoNo,
+            "rtoRegistration": privateCar.rtoRegistration,
+            "showRoomPrice": 0,
+            "carrierType": "",
+            "usageType": "",
+            "noOfTraillers": "",
+            "trailerIdvDto": [],
+            "vehicleType": "",
+            "regiCityCode": "",
+            "regiCityName": privateCar.zoneName,
+            "grossVehicleWeight": "null"
+        },
+        "CoverDetails": coverageList,
+        "InsurerDetails": Insurerdetails,
+    }
+
+    const request1 = {
+        "CustomerDetails": {
+            "firstName": "",
+            "lastName": "",
+            "mobileNo": "",
+            "email": "",
+            "customerType": customer,
+            "GSTIN": "",
+            "aadharNumber": "--",
+            "dateOfBirth": "",
+            "address1": "",
+            "address2": "",
+            "address3": "",
+            "areaCode": "",
+            "areaName": "",
+            "cityCode": "",
+            "cityName": "",
+            "stateName": "",
+            "stateCode": "",
+            "pinCode": "",
+            "panNumber": ""
+        },
+        "QuotationData": {
+            "quoteNo": privateCar.quoteId,
+            "renewalPolicyNo": "",
+            "lineOfBusiness": "MOTOR",
+            "subLine": "Private Car",
+            "productCode": productcode,
+            "productName": productName,
+            "businessType": businessType,
+            "policyStartDate": privateCar.policyStartDate,
+            "expiryDate": privateCar.policyEndDate,
+            "userId": "",
+            "isVipPolicy": "N",
+            "channelType": "POS",
+            "branchName": "",
+            "branchCode": "",
+            "quoteStatus": "QUOTE",
+            "insurerCode": "",
+            "insurerName": "",
+            "intgQuotationNo": "",
+            "policyTenure": "1",
+            "cpaTenure": "1",
+            "newBusinessOdTp": "",
+            "odExpiryDate": "26/05/2022",
+            "tpExpiryDate": "26/05/2024",
+            "parentUserId": "saravanan@12",
+            "walletType": "",
+            "isCPADeclaration": "",
+            "shortfallPercent": "0.0",
+            "revisedDiscountRt": "0",
+            "PreviousPolicyDetails": {
+                "prevPolicyNo": "",
+                "prevPolicyExp": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyNcb": privateCar.ncb,
+                "prevPolicyInsurerCode": privateCar.previousInsurerCode,
+                "prevPolicyInsurerName": privateCar.previousInsurer,
+                "isPrevPolicyClaim": privateCar.lastYearClaim,
+                "prevPolicyType": privateCar.previousPolicyType,
+                "prevPolicyODExpireDate": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyTPExpireDate": privateCar.previousTpPolicyExpiryDate,
+                "prevPolicyTPStartDate": privateCar.previousTpPolicyStartDate
+            }
+        },
+        "VehicleDetails": {
+            "engineNo": privateCar.engineNumber,
+            "chassisNo": privateCar.chassisNumber,
+            "registrationNo": privateCar.registrationNumber1 + "-" + privateCar.registrationNumber2 + "-" + privateCar.registrationNumber3 + "-" + privateCar.registrationNumber4,
+            "yearOfMfg": privateCar.manufacturingYear,
+            "registrationDate": "27/05/2021",
+            "makeCode": privateCar.makeCode,
+            "modelCode": privateCar.modelCode,
+            "makeName": privateCar.make,
+            "modelName": privateCar.model,
+            "subModelName": privateCar.subModel,
+            "subModelCode": privateCar.subModelCode,
+            "engineCC": "",
+            "fuelType": privateCar.fuel,
+            "rtoCode": privateCar.rtoCode,
+            "rtoName": privateCar.rotLocation,
+            "actualIdv": 0,
+            "vehicleAge": 1.03,
+            "seatingCapacity": privateCar.seatingCapacity,
+            "cubicCapacity": privateCar.cc,
+            "zone": privateCar.zoneName,
+            "currentNCB": privateCar.ncb,
+            "isInBuilt": "false",
+            "isCarOwnerChanged": privateCar.vehicleOwnershipChanged,
+            "isUsedToVehicle": "N",
+            "istrailerneed": "",
+            "rtoNo": privateCar.rtoNo,
+            "rtoRegistration": privateCar.rtoRegistration,
+            "showRoomPrice": 0,
+            "carrierType": "",
+            "usageType": "",
+            "noOfTraillers": "",
+            "trailerIdvDto": [],
+            "vehicleType": "",
+            "regiCityCode": "",
+            "regiCityName": privateCar.rotLocation,
+            "grossVehicleWeight": "null"
+        },
+        "CoverDetails": coverageList,
+        "InsurerDetails": [{
+            "insurerCode": "124",
+            "idv": 0,
+            "minIdv": 0,
+            "maxIdv": 0,
+            "originalIdv": 0,
+            "planName": "",
+            "tariffDis": "0"
+        },],
+    }
+    const [premium, setPremium] = useState();
+    useEffect(() => {
+        if (privateCar.save === "true") {
+            axios({
+                method: "POST",
+                url: 'https://pot.fapremium.net/mis/api/saveQuoteDetails.json',
+                headers,
+                data: request,
+            }).then(res => {
+                console.log("save", res.data);
+                setPrivateCar({ ...privateCar, quoteId: res.data.quoteNo })
+
+            })
+                .catch(err => {
+                    console.log("error in request", err);
+                });
+            setPrivateCar({ ...privateCar, save: "false" })
+        }
+        if (privateCar.recalculate === "true") {
+            axios({
+                method: "POST",
+                url: 'https://pot.fapremium.net/mis/api/singleInsurerCalc.json',
+                headers,
+                data: dat,
+            }).then(res => {
+                console.log("single ", res.data);
+                setPremium(res.data.premium);
+            })
+                .catch(err => {
+                    console.log("error in request", err);
+                }); setPrivateCar({ ...privateCar, recalculate: "false" })
+        }
+
+    }, [privateCar.recalculate]);
+    //console.log(request1)
+    /*  useEffect(() => {
+         axios({
+             method: "POST",
+             url: 'https://pot.fapremium.net/mis/api/saveQuoteDetails.json',
+             headers,
+             data: da,
+         }).then(res => {
+             console.log("save", res.data);
          })
-             .then((response) => response.json())
-             .then((responseData) => {
-                 setInsurerdetails(responseData.insurerList);
-             }
-  ) */
-    }, []);
+             .catch(err => {
+                 console.log("error in request", err);
+             });
+         axios({
+             method: "POST",
+             url: 'https://pot.fapremium.net/mis/api/singleInsurerCalc.json',
+             headers,
+             data: dat,
+         }).then(res => {
+             console.log("single ", res.data);
+         })
+             .catch(err => {
+                 console.log("error in request", err);
+             });
+
+         /*  fetch('https://pot.fapremium.net/masters/api/getInsurerDetail.json', {
+              method: 'POST',
+              headers
+          })
+              .then((response) => response.json())
+              .then((responseData) => {
+                  setInsurerdetails(responseData.insurerList);
+              }
+   )
+     }, []); */
 
 
 
@@ -169,6 +584,7 @@ export default function Premimum({ className, variation, ...props }) {
 
     return (
         <Block>
+
             <div className="card-aside-wrap">
                 <div
                     className={`card-aside card-aside-left user-aside toggle-slide toggle-slide-left toggle-break-lg w-25 ${sm ? "content-active" : ""
@@ -394,7 +810,7 @@ export default function Premimum({ className, variation, ...props }) {
 
                         </div>
                         <div className='text-center w-100'>
-                            <Button color="primary"> Re-calculate</Button>
+                            <Button color="primary" onClick={() => setPrivateCar({ ...privateCar, recalculate: "true" })}> Re-calculate</Button>
                         </div>
                     </div>
                 </div>

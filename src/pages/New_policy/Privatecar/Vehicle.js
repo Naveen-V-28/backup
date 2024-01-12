@@ -13,7 +13,6 @@ import {
     OverlineTitle
 } from '../../../components/Component';
 import headers from '../token';
-import Request from './Request';
 import { UserContext } from './Vehicledetails';
 export let date_od;
 export let date_tp;
@@ -28,10 +27,10 @@ export default function Vehicle(props) {
 
 
         if (privateCar.policyType === "New Business" && privateCar.customerType === "Individual") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true" })
         }
         else if (privateCar.policyType === "New Business" && privateCar.customerType === "Company") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true" })
         }
         else if (privateCar.policyType !== "New Business") {
             setPrivateCar({ ...privateCar, fuel: result, seatingCapacity: seatingcapacity, cc: cc })
@@ -87,8 +86,6 @@ export default function Vehicle(props) {
     const [rtoL, setRtoLocation] = useState();
 
     useEffect(() => {
-
-
         fetch('https://pot.fapremium.net/masters/api/getVehicleDetailsByVehicleCategory.json?sublineCode=PC', {
             method: 'POST',
             headers
@@ -107,6 +104,7 @@ export default function Vehicle(props) {
             })
 
     }, []);
+
 
     let rtoCode, rtoLocation, rtoNo, rtoRegistration, zoneName;
     if (rtoL !== undefined) {
@@ -199,7 +197,7 @@ export default function Vehicle(props) {
                     <span >Basic info, like insured name and address for which claim needs to be processed</span>
                 </BlockHeadContent>
             </BlockHead>
-            <Request />
+
             <Block >
                 <Form className={formClass} onSubmit={handleSubmit(onFormSubmit)}>
                     <Row className="gy-2">

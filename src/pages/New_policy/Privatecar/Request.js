@@ -1,21 +1,300 @@
-import { useContext } from "react";
-import { UserContext } from "./Vehicledetails";
+/* import axios from "axios";
+import { useContext, useEffect } from "react";
+import headers from "../token";
+import { UserContext } from "./Vehicledetails"; */
+let Insurerdetails = [
+    {
+        "insurerCode": "135",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "111",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "122",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "129",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "105",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "135",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "125",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "121",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "133",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "124",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "121",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "118",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "125",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "112",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "128",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "Silver",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "124",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "105",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "125",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "116",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "120",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "111",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "122",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "129",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "117",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "114",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "138",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "138",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "107",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "126",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "107",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    },
+    {
+        "insurerCode": "138",
+        "idv": 0,
+        "minIdv": 0,
+        "maxIdv": 0,
+        "originalIdv": 0,
+        "planName": "",
+        "tariffDis": "0"
+    }
+]
 
-/* prevpolicy insuer date
-prevpolicyexpiry = od expiry date
-last year claim= prev policy claim = value "Y " "N"*/
-
+export default Insurerdetails;
+/*
 export default function Request() {
     const { privateCar, setPrivateCar, productCode } = useContext(UserContext);
 
 
-    let odEndDate_nb, tpEndDate_nb, policyStartDate_nb, policyStartDate, policyEndDate, previousPolicyExpiryDate, previousOdPolicyExpiryDate, previousTpPolicyStartDate, previousTpPolicyExpiryDate, productcode, customer, businessType, productName;
+    let productcode, customer, businessType, productName;
 
-    let registrationdate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
+
     if (privateCar.policyType === "New Business") {
-        policyStartDate_nb = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-        tpEndDate_nb = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-        odEndDate_nb = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
+
         productcode = "PCC"
         businessType = "NEW BUSINESS"
         productName = "COMPREHENSIVE"
@@ -36,23 +315,141 @@ export default function Request() {
         customer = "CUSTOMER_INDIVIDUAL"
     }
 
-    if (privateCar.customerType === "Individual") {
+    if (privateCar.customerType === "Company") {
         customer = "COMPANY"
     }
 
-    if (privateCar.policyType !== "New Business" && privateCar.policyType !== "Own Damage") {
-        policyStartDate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-        policyEndDate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-
-    }
     if (privateCar.policyType === "Own Damage") {
-        previousOdPolicyExpiryDate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-        previousTpPolicyStartDate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
-        previousTpPolicyExpiryDate = new Date(privateCar.registrationDate).toLocaleDateString('en-GB');
+
         productcode = "PCCOD"
         businessType = "RollOver"
         productName = "PCC_OWNDAMAGE"
     }
+    let coverageList = [];
+    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Individual") {
+        coverageList = [{
+            coverCode: "CPA",
+            coverName: "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)",
+            coverType: "ADDITIONAL",
+            isPrevOpted: "Y",
+            isRateParam: "1500000",
+            sumInsured: "0",
+            sumInsuredType: "NONE"
+        }]
+    }
+    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Company") {
+        coverageList = [{
+            coverCode: "LLE",
+            coverName: "LEGAL LIABILITY PAID TO EMPLOYEE",
+            coverType: "ADDITIONAL",
+            isPrevOpted: "Y",
+            isRateParam: "",
+            sumInsured: "0",
+            sumInsuredType: "NONE"
+        }]
+    }
+    productCode.map((list) => {
+        return (
+            privateCar.discount.includes(list.coverName) && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName !== "PERSONAL BELONGING" && list.coverName !== "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName === "PERSONAL BELONGING") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.personal_belongings,
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+    productCode.map((list) => {
+        return (
+            (privateCar.addon.includes(list.coverName) && list.coverName === "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.hotel,
+                sumInsuredType: "NONE"
+            }]))
+    }
+    )
+
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName !== "P.A. COVER TO PAID DRIVER" && list.coverName !== "LEGAL LIABILITY PAID TO EMPLOYEE" && list.coverName !== "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)" && list.coverName !== "UNNAMED PASSENGER" && list.coverName !== "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: "0",
+                sumInsuredType: "NONE"
+            }]))
+    })
+
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "P.A. COVER TO PAID DRIVER") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.pa_cover,
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "UNNAMED PASSENGER") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.unnamed_passenger,
+                sumInsuredType: "NONE"
+            }]))
+    })
+    productCode.map((list) => {
+        return (
+            (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
+                coverCode: list.coverCode,
+                coverName: list.coverName,
+                coverType: list.coverType,
+                isPrevOpted: "",
+                isRateParam: "",
+                sumInsured: privateCar.bi_fuel,
+                sumInsuredType: "NONE"
+            }]))
+    })
+    console.log(coverageList)
 
     const request = {
         "CustomerDetails": {
@@ -84,8 +481,8 @@ export default function Request() {
             "productCode": productcode,
             "productName": productName,
             "businessType": businessType,
-            "policyStartDate": policyStartDate,
-            "expiryDate": policyEndDate,
+            "policyStartDate": privateCar.policyStartDate,
+            "expiryDate": privateCar.policyEndDate,
             "userId": "",
             "isVipPolicy": "N",
             "channelType": "POS",
@@ -98,8 +495,8 @@ export default function Request() {
             "policyTenure": "1",
             "cpaTenure": "1",
             "newBusinessOdTp": "",
-            "odExpiryDate": "",
-            "tpExpiryDate": "",
+            "odExpiryDate": privateCar.odEndDate_nb,
+            "tpExpiryDate": privateCar.tpEndDate_nb,
             "parentUserId": "saravanan@12",
             "walletType": "",
             "isCPADeclaration": "",
@@ -107,15 +504,15 @@ export default function Request() {
             "revisedDiscountRt": "0",
             "PreviousPolicyDetails": {
                 "prevPolicyNo": "",
-                "prevPolicyExp": previousOdPolicyExpiryDate,
+                "prevPolicyExp": privateCar.previousOdPolicyExpiryDate,
                 "prevPolicyNcb": privateCar.ncb,
                 "prevPolicyInsurerCode": privateCar.previousInsurerCode,
                 "prevPolicyInsurerName": privateCar.previousInsurer,
                 "isPrevPolicyClaim": privateCar.lastYearClaim,
                 "prevPolicyType": privateCar.previousPolicyType,
-                "prevPolicyODExpireDate": previousOdPolicyExpiryDate,
-                "prevPolicyTPExpireDate": previousTpPolicyExpiryDate,
-                "prevPolicyTPStartDate": previousTpPolicyStartDate
+                "prevPolicyODExpireDate": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyTPExpireDate": privateCar.previousTpPolicyExpiryDate,
+                "prevPolicyTPStartDate": privateCar.previousTpPolicyStartDate
             }
         },
         "VehicleDetails": {
@@ -133,7 +530,7 @@ export default function Request() {
             "engineCC": "",
             "fuelType": privateCar.fuel,
             "rtoCode": privateCar.rtoCode,
-            "rtoName": privateCar.rtoName,
+            "rtoName": privateCar.zoneName,
             "actualIdv": 0,
             "vehicleAge": 1.03,
             "seatingCapacity": privateCar.seatingCapacity,
@@ -153,10 +550,10 @@ export default function Request() {
             "trailerIdvDto": [],
             "vehicleType": "",
             "regiCityCode": "",
-            "regiCityName": privateCar.rtoName,
+            "regiCityName": privateCar.zoneName,
             "grossVehicleWeight": "null"
         },
-        "CoverDetails": [],
+        "CoverDetails": coverageList,
         "InsurerDetails": [
             {
                 "insurerCode": "135",
@@ -442,119 +839,27 @@ export default function Request() {
 
     }
 
-    //console.log(request)
-
-    let coverageList = [];
-    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Individual") {
-        coverageList = [{
-            "coverCode": "CPA",
-            "coverName": "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)",
-            "coverType": "ADDITIONAL",
-            isPrevOpted: "Y",
-            isRateParam: "1500000",
-            sumInsured: "0",
-            sumInsuredType: "NONE"
-        }]
-    }
-    if (privateCar.policyType !== "Own Damage" && privateCar.customerType === "Company") {
-        coverageList = [{
-            coverCode: "LLE",
-            coverName: "LEGAL LIABILITY PAID TO EMPLOYEE",
-            coverType: "ADDITIONAL",
-            isPrevOpted: "Y",
-            isRateParam: "",
-            sumInsured: "0",
-            sumInsuredType: "NONE"
-        }]
-    }
-
-    productCode.map((list) => {
-        return (
-            privateCar.discount.includes(list.coverName) === true && (coverageList = [...coverageList, {
-                coverCode: list.coverCode,
-                coverName: list.coverName,
-                coverType: list.coverType,
-                isPrevOpted: "",
-                isRateParam: "",
-                sumInsured: "0",
-                sumInsuredType: "NONE"
-            }])
 
 
-                (privateCar.addon.includes(list.coverName) && list.coverName !== "PERSONAL BELONGING" && list.coverName !== "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: "0",
-                    sumInsuredType: "NONE"
-                }])
-                (privateCar.addon.includes(list.coverName) && list.coverName === "PERSONAL BELONGING") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: privateCar.personal_belongings,
-                    sumInsuredType: "NONE"
-                }])
-                (privateCar.addon.includes(list.coverName) && list.coverName === "EMERGENCY TRANSPORT AND HOTEL EXPENSES ") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: privateCar.hotel,
-                    sumInsuredType: "NONE"
-                }])
+    useEffect(() => {
+        axios({
+            method: "POST",
+            url: 'https://pot.fapremium.net/mis/api/saveQuoteDetails.json',
+            headers,
+            data: request,
+        }).then(res => {
+            console.log("save", res.data);
 
+        })
+            .catch(err => {
+                console.log("error in request", err);
+            });
 
-                (privateCar.additionalCovers.includes(list.coverName) && list.coverName !== "P.A. COVER TO PAID DRIVER" && list.coverName !== "UNNAMED PASSENGER" && list.coverName !== "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: "0",
-                    sumInsuredType: "NONE"
-                }])
-
-                (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "P.A. COVER TO PAID DRIVER") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: privateCar.pa_cover,
-                    sumInsuredType: "NONE"
-                }])
-                (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "UNNAMED PASSENGER") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: privateCar.unnamed_passenger,
-                    sumInsuredType: "NONE"
-                }])
-                (privateCar.additionalCovers.includes(list.coverName) && list.coverName === "BI-FUEL KIT (CNG)") && (coverageList = [...coverageList, {
-                    coverCode: list.coverCode,
-                    coverName: list.coverName,
-                    coverType: list.coverType,
-                    isPrevOpted: "",
-                    isRateParam: "",
-                    sumInsured: privateCar.bi_fuel,
-                    sumInsuredType: "NONE"
-                }])
-
-        )
-    }
-    )
-    console.log(coverageList)
-
+    }, []);
+    console.log(request)
     return (
         <div>
         </div>
     )
 }
+ */
