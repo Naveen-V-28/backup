@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Card, Col, Collapse, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
+import { Button, Card, Col, Collapse, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'reactstrap';
 import { Block, Icon } from '../../../components/Component';
 import img101 from "../Insurer_Images/101.png";
 import img104 from "../Insurer_Images/104.png";
@@ -13,7 +13,6 @@ import img117 from "../Insurer_Images/117.png";
 import img118 from "../Insurer_Images/118.png";
 import img120 from "../Insurer_Images/120.png";
 import img122 from "../Insurer_Images/122.png";
-import dat from './single';
 
 import axios from 'axios';
 import img123 from "../Insurer_Images/123.png";
@@ -45,6 +44,19 @@ export default function Premimum({ className, variation, ...props }) {
             setIsOpen(param);
         }
     };
+
+    const myDate = (dateValue) => {
+        if (dateValue !== "") {
+            let str = dateValue.split('-')
+            console.log(str)
+            return (str[2] + '/' + str[1] + '/' + str[0])
+        }
+
+        else {
+            return "";
+        }
+    }
+
 
     const [insurerdetails, setInsurerdetails] = useState();
     let productcode, customer, businessType, productName;
@@ -251,8 +263,8 @@ export default function Premimum({ className, variation, ...props }) {
             "policyTenure": "1",
             "cpaTenure": "1",
             "newBusinessOdTp": "",
-            "odExpiryDate": privateCar.odEndDate_nb,
-            "tpExpiryDate": privateCar.tpEndDate_nb,
+            "odExpiryDate": myDate(privateCar.odEndDate_nb),
+            "tpExpiryDate": myDate(privateCar.tpEndDate_nb),
             "parentUserId": "saravanan@12",
             "walletType": "",
             "isCPADeclaration": "",
@@ -260,15 +272,15 @@ export default function Premimum({ className, variation, ...props }) {
             "revisedDiscountRt": "0",
             "PreviousPolicyDetails": {
                 "prevPolicyNo": "",
-                "prevPolicyExp": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyExp": myDate(privateCar.previousOdPolicyExpiryDate),
                 "prevPolicyNcb": privateCar.ncb,
                 "prevPolicyInsurerCode": privateCar.previousInsurerCode,
                 "prevPolicyInsurerName": privateCar.previousInsurer,
                 "isPrevPolicyClaim": privateCar.lastYearClaim,
                 "prevPolicyType": privateCar.previousPolicyType,
-                "prevPolicyODExpireDate": privateCar.previousOdPolicyExpiryDate,
-                "prevPolicyTPExpireDate": privateCar.previousTpPolicyExpiryDate,
-                "prevPolicyTPStartDate": privateCar.previousTpPolicyStartDate
+                "prevPolicyODExpireDate": myDate(privateCar.previousOdPolicyExpiryDate),
+                "prevPolicyTPExpireDate": myDate(privateCar.previousTpPolicyExpiryDate),
+                "prevPolicyTPStartDate": myDate(privateCar.previousTpPolicyStartDate)
             }
         },
         "VehicleDetails": {
@@ -276,7 +288,7 @@ export default function Premimum({ className, variation, ...props }) {
             "chassisNo": privateCar.chassisNumber,
             "registrationNo": privateCar.registrationNumber1 + "-" + privateCar.registrationNumber2 + "-" + privateCar.registrationNumber3 + "-" + privateCar.registrationNumber4,
             "yearOfMfg": privateCar.manufacturingYear,
-            "registrationDate": privateCar.registrationDate,
+            "registrationDate": myDate(privateCar.registrationDate),
             "makeCode": privateCar.makeCode,
             "modelCode": privateCar.modelCode,
             "makeName": privateCar.make,
@@ -343,8 +355,8 @@ export default function Premimum({ className, variation, ...props }) {
             "productCode": productcode,
             "productName": productName,
             "businessType": businessType,
-            "policyStartDate": privateCar.policyStartDate,
-            "expiryDate": privateCar.policyEndDate,
+            "policyStartDate": myDate(privateCar.policyStartDate),
+            "expiryDate": myDate(privateCar.policyEndDate),
             "userId": "",
             "isVipPolicy": "N",
             "channelType": "POS",
@@ -357,8 +369,8 @@ export default function Premimum({ className, variation, ...props }) {
             "policyTenure": "1",
             "cpaTenure": "1",
             "newBusinessOdTp": "",
-            "odExpiryDate": "26/05/2022",
-            "tpExpiryDate": "26/05/2024",
+            "odExpiryDate": myDate(privateCar.odEndDate_nb),
+            "tpExpiryDate": myDate(privateCar.tpEndDate_nb),
             "parentUserId": "saravanan@12",
             "walletType": "",
             "isCPADeclaration": "",
@@ -366,15 +378,15 @@ export default function Premimum({ className, variation, ...props }) {
             "revisedDiscountRt": "0",
             "PreviousPolicyDetails": {
                 "prevPolicyNo": "",
-                "prevPolicyExp": privateCar.previousOdPolicyExpiryDate,
+                "prevPolicyExp": myDate(privateCar.previousPolicyExpiryDate),
                 "prevPolicyNcb": privateCar.ncb,
                 "prevPolicyInsurerCode": privateCar.previousInsurerCode,
                 "prevPolicyInsurerName": privateCar.previousInsurer,
                 "isPrevPolicyClaim": privateCar.lastYearClaim,
                 "prevPolicyType": privateCar.previousPolicyType,
-                "prevPolicyODExpireDate": privateCar.previousOdPolicyExpiryDate,
-                "prevPolicyTPExpireDate": privateCar.previousTpPolicyExpiryDate,
-                "prevPolicyTPStartDate": privateCar.previousTpPolicyStartDate
+                "prevPolicyODExpireDate": myDate(privateCar.previousPolicyExpiryDate),
+                "prevPolicyTPExpireDate": myDate(privateCar.previousTpPolicyExpiryDate),
+                "prevPolicyTPStartDate": myDate(privateCar.previousTpPolicyStartDate)
             }
         },
         "VehicleDetails": {
@@ -382,7 +394,7 @@ export default function Premimum({ className, variation, ...props }) {
             "chassisNo": privateCar.chassisNumber,
             "registrationNo": privateCar.registrationNumber1 + "-" + privateCar.registrationNumber2 + "-" + privateCar.registrationNumber3 + "-" + privateCar.registrationNumber4,
             "yearOfMfg": privateCar.manufacturingYear,
-            "registrationDate": "27/05/2021",
+            "registrationDate": myDate(privateCar.registrationDate),
             "makeCode": privateCar.makeCode,
             "modelCode": privateCar.modelCode,
             "makeName": privateCar.make,
@@ -391,8 +403,8 @@ export default function Premimum({ className, variation, ...props }) {
             "subModelCode": privateCar.subModelCode,
             "engineCC": "",
             "fuelType": privateCar.fuel,
-            "rtoCode": privateCar.rtoCode,
-            "rtoName": privateCar.rotLocation,
+            "rtoCode": privateCar.rtoNo,
+            "rtoName": privateCar.rtoLocation,
             "actualIdv": 0,
             "vehicleAge": 1.03,
             "seatingCapacity": privateCar.seatingCapacity,
@@ -412,7 +424,7 @@ export default function Premimum({ className, variation, ...props }) {
             "trailerIdvDto": [],
             "vehicleType": "",
             "regiCityCode": "",
-            "regiCityName": privateCar.rotLocation,
+            "regiCityName": privateCar.rtoLocation,
             "grossVehicleWeight": "null"
         },
         "CoverDetails": coverageList,
@@ -441,18 +453,24 @@ export default function Premimum({ className, variation, ...props }) {
             })
                 .catch(err => {
                     console.log("error in request", err);
+                    setPrivateCar({ ...privateCar, save: "false" })
                 });
-            setPrivateCar({ ...privateCar, save: "false" })
+
         }
+
+
+    }, [privateCar.save === "true"]);
+    useEffect(() => {
+
         if (privateCar.recalculate === "true") {
             axios({
                 method: "POST",
                 url: 'https://pot.fapremium.net/mis/api/singleInsurerCalc.json',
                 headers,
-                data: dat,
+                data: request1,
             }).then(res => {
                 console.log("single ", res.data);
-                setPremium(res.data.premium);
+                setPremium(res.data.premium["124"]);
             })
                 .catch(err => {
                     console.log("error in request", err);
@@ -460,7 +478,11 @@ export default function Premimum({ className, variation, ...props }) {
         }
 
     }, [privateCar.recalculate]);
-    //console.log(request1)
+
+    /* // console.log(premium.actualIdv)
+    console.log(request)
+    console.log(request1) */
+
     /*  useEffect(() => {
          axios({
              method: "POST",
@@ -582,6 +604,18 @@ export default function Premimum({ className, variation, ...props }) {
 
     const toggle = () => setModal(!modal);
 
+    const [modal1, setModal1] = useState(false);
+
+    const togg = () => setModal1(!modal1);
+    const [down, setDown] = useState({
+        name: "",
+        phone: "",
+        email: "",
+    });
+
+
+    /*
+        let lin = `(https://pot.fapremium.net/dms/comparedPDF.json?customerName=${name}&mobileNo=${down.phone}&quoteNo=${privateCar.quoteId}&comparedinsurerList=124&emailId=)` */
     return (
         <Block>
 
@@ -621,6 +655,79 @@ export default function Premimum({ className, variation, ...props }) {
                                     <Button color='primary'>Update</Button>
                                 </ModalFooter>
                             </Modal>
+
+
+                            <Modal isOpen={modal1} toggle={togg} >
+                                <ModalHeader
+                                    toggle={togg}
+                                    close={
+                                        <div>
+                                            <button className="close ms-2" onClick={togg}>
+                                                <Icon name="cross" />
+                                            </button>
+                                            <button className="close" >
+                                                <Icon name="share" />
+                                            </button>
+
+                                        </div>
+                                    }
+                                >
+                                    Quote Download
+                                </ModalHeader>
+                                <ModalBody>
+                                    <Row className="gy-2">
+                                        <Col >
+                                            <div className="form-group">
+                                                <Label htmlFor="default-0" className="form-label">
+                                                    Customer Name<code className='text-danger'>*</code>
+                                                </Label>
+                                                <div className="form-control-wrap" onChange={(e) => setDown({ ...down, name: e.target.value })}>
+                                                    <input className="form-control" type="text" id="default-0" placeholder="Customer Name"
+                                                    />
+
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    <Row className="gy-2">
+                                        <Col >
+                                            <div className="form-group">
+                                                <Label htmlFor="default-1" className="form-label">
+                                                    Mobile Number<code className='text-danger'>*</code>
+                                                </Label>
+                                                <div className="form-control-wrap" onChange={(e) => setDown({ ...down, phone: e.target.value })}>
+                                                    <input className="form-control" type="number" id="default-1" placeholder="Mobile Number"
+                                                    />
+
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    <Row className="gy-2">
+                                        <Col >
+                                            <div className="form-group">
+                                                <Label htmlFor="default-2" className="form-label">
+                                                    Email<code className='text-danger'>*</code>
+                                                </Label>
+                                                <div className="form-control-wrap" onChange={(e) => setDown({ ...down, email: e.target.value })}>
+                                                    <input className="form-control" type="email" id="default-2" placeholder="Email"
+                                                    />
+
+                                                </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
+
+                                </ModalBody>
+                                <ModalFooter className="bg-light">
+
+                                    <a href={`https://pot.fapremium.net/dms/comparedPDF.json?customerName=${down.name}&mobileNo=${down.phone}&quoteNo=${privateCar.quoteId}&comparedinsurerList=124&emailId=`}
+                                    >
+                                        Download</a>
+                                </ModalFooter>
+                            </Modal>
+
+
 
 
                         </div>
@@ -813,35 +920,36 @@ export default function Premimum({ className, variation, ...props }) {
                             <Button color="primary" onClick={() => setPrivateCar({ ...privateCar, recalculate: "true" })}> Re-calculate</Button>
                         </div>
                     </div>
-                </div>
+                </div >
                 <div className="card-inner card-inner-lg">
                     {sm && mobileView && <div className="toggle-overlay" onClick={() => updateSm(!sm)}></div>}
 
-                    <Card className='bg-purple-dim border-2 border-primary '>
+                    <Card className='bg-light border-2 border-primary '>
                         <Row className="row">
                             <Col lg="8" className=" card-inner gy-2">
                                 <Row className='card-inner' >
 
                                     <Col sm="3" className=' align-center'>
-                                        <img src={img133}
+                                        <img src={img124}
                                             alt="img" />
                                     </Col>
 
-                                    <Col sm="5" className='align-center '><h5>Name</h5>
+                                    <Col sm="6" className='align-center justify-content-center '><h5>Royal Sundaram</h5>
                                     </Col>
+                                    <Col lg="3" className="align-center justify-content-center"><Button size="sm" color='white' className=" btn btn" onClick={togg}><span> Download</span>  <Icon name="arrow-to-down" /></Button></Col>
 
                                 </Row>
                                 <Row className='card-inner'  >
 
-                                    <Col lg="4" className='align-center'><span className=' bg-info rounded text-center px-1'>Recomended</span></Col>
-                                    <Col lg="4" className='align-center justify-content-center'><p ><strong className='text-black'>IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> 680000 </span></p>
+                                    {/*  <Col lg="4" className='align-center'><span className=' bg-info rounded text-center px-1'>Recomended</span></Col> */}
+                                    {(premium !== undefined && premium.actualIdv !== undefined) && <><Col lg="4" className='align-center justify-content-center'><p ><strong className='text-black'>IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> {premium.actualIdv}</span></p>
                                     </Col>
-                                    <Col lg="4" className="align-center justify-content-center"><Button size="sm" color='white' className=" btn btn"><span> Download</span>  <Icon name="arrow-to-down" /></Button></Col>
+                                        <Col lg="4" className='align-center justify-content-center'><p ><strong className='text-black'>Min</strong> : <span className='mt-2 '><Icon name="sign-inr" /> {premium.minIdv}</span></p>
+                                        </Col>
+                                        <Col lg="4" className='align-center justify-content-center'><p ><strong className='text-black'>Max</strong> : <span className='mt-2 '><Icon name="sign-inr" /> {premium.maxIdv}</span></p>
+                                        </Col></>}
                                 </Row>
-                                <Row className='card-inner'> <Col lg="6" className='align-center justify-content-center'><p ><strong className='text-black'>Min IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> 680000 </span></p>
-                                </Col>
-                                    <Col lg="6" className='align-center justify-content-center'><p ><strong className='text-black'>Max IDV</strong> : <span className='mt-2 '><Icon name="sign-inr" /> 680000 </span></p>
-                                    </Col></Row>
+
                                 <Row className='card-inner'  >
 
                                     <Col className='align-center '>
@@ -885,9 +993,9 @@ export default function Premimum({ className, variation, ...props }) {
 
                                 </Row>
                             </Col>
-                            <Col lg="3" className="border-start card-inner text-center gy-2 ">
-                                <Col>    <h5 className=' text-center' > <Icon name="sign-inr" />7500</h5></Col>
-                                <Col>   <Button color='primary' size='md' onClick={toggle}>Premium Breakup</Button></Col>
+                            <Col lg="3" className="border-start card-inner text-center  ">
+                                {(premium !== undefined && premium.totalPremium !== undefined) && <Col className='mb-1'>    <h5 className=' text-center' > <Icon name="sign-inr" />{premium.totalPremium}</h5></Col>}
+                                <Col className='mb-1'>   <Button color='primary' size='md' onClick={toggle}>Premium Breakup</Button></Col>
                                 <Col className=''>   <Button color='primary' className="btn" size='md' >Buy</Button></Col>
                             </Col>
                         </Row>
@@ -895,7 +1003,7 @@ export default function Premimum({ className, variation, ...props }) {
 
 
                 </div>
-            </div>
+            </div >
             <Modal isOpen={modal} toggle={toggle} >
                 <ModalHeader
                     toggle={toggle}
@@ -961,7 +1069,7 @@ export default function Premimum({ className, variation, ...props }) {
             </Modal>
 
 
-        </Block>
+        </Block >
 
 
     )

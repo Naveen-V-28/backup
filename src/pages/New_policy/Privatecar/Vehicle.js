@@ -27,13 +27,13 @@ export default function Vehicle(props) {
 
 
         if (privateCar.policyType === "New Business" && privateCar.customerType === "Individual") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true" })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "COMPULSORY PERSONAL ACCIDENT(OWNER DRIVER)"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true", recalculate: "true" })
         }
         else if (privateCar.policyType === "New Business" && privateCar.customerType === "Company") {
-            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true" })
+            setPrivateCar({ ...privateCar, additionalCovers: [...privateCar.additionalCovers, "LEGAL LIABILITY PAID TO EMPLOYEE"], makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, manufacturingYear: thisyear, fuel: result, seatingCapacity: seatingcapacity, cc: cc, tpEndDate_nb: date_tp, odEndDate_nb: date_od, save: "true", recalculate: "true" })
         }
         else if (privateCar.policyType !== "New Business") {
-            setPrivateCar({ ...privateCar, fuel: result, seatingCapacity: seatingcapacity, cc: cc })
+            setPrivateCar({ ...privateCar, fuel: result, seatingCapacity: seatingcapacity, cc: cc, makeCode: makCode, modelCode: modeCode, subModelCode: subModeCode, rtoRegistration: rtoRegistration, rtoLocation: rtoLocation, rtoNo: rtoNo, zoneName: zoneName, rtoCode: rtoCode, })
         }
 
         props.handleNext()
@@ -108,6 +108,7 @@ export default function Vehicle(props) {
 
     let rtoCode, rtoLocation, rtoNo, rtoRegistration, zoneName;
     if (rtoL !== undefined) {
+
         let ap = (Object.keys(rtoL))
         let vp = ap.indexOf(state + stateNumber)
         if ((rtoL[ap[vp]]) !== undefined) {
@@ -119,7 +120,14 @@ export default function Vehicle(props) {
         }
 
 
+
     }
+    /* console.log(rtoRegistration)
+    console.log(rtoCode)
+    console.log(rtoLocation)
+    console.log(rtoNo)
+    console.log(zoneName) */
+
 
     let makeAll = [];
     if (modelAll !== undefined) {
